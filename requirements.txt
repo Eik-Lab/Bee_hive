@@ -1,5 +1,4 @@
 absl-py==0.14.0
-acconeer-exptool @ file:///home/uzaaft/Documents/njord/litech/acconeer-python-exploration
 alabaster==0.7.12
 alembic==1.7.3
 anyio @ file:///home/conda/feedstock_root/build_artifacts/anyio_1632754236664/work/dist
