@@ -27,23 +27,12 @@ app = Flask(__name__)
 
 @app.route('/data/', methods=['POST'])
 def post_something():
-    param = request.form.get('data')
     json = request.get_json()
-    print(param)
     print(json)
-    # You can add the test cases you made in the previous function, but in our case here you are just testing the POST functionality
-    if param:
-        return jsonify({
-            "Message": f"Welcome {name} to our awesome platform!!",
-            # Add this option to distinct the POST request
-            "METHOD" : "POST"
-        })
-    else:
-        return jsonify({
-            "ERROR": "no data found, please send data."
-        })
+    return None
 
-# A welcome message to test our server
+
+
 @app.route('/')
 def index():
     return "<h1>Welcome to our server !!</h1>"
