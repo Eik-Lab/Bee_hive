@@ -3,20 +3,6 @@
 version = 3
 
 [[package]]
-name = "Bee_hive"
-version = "0.1.0"
-dependencies = [
- "actix-web",
- "chrono",
- "diesel",
- "dotenv",
- "r2d2",
- "serde",
- "serde_derive",
- "serde_json",
-]
-
-[[package]]
 name = "actix-codec"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -265,6 +251,20 @@ name = "base64"
 version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "904dfeac50f3cdaba28fc6f57fdcddb75f49ed61346676a78c4ffe55877802fd"
+
+[[package]]
+name = "bee_hive"
+version = "0.1.0"
+dependencies = [
+ "actix-web",
+ "chrono",
+ "diesel",
+ "dotenv",
+ "r2d2",
+ "serde",
+ "serde_derive",
+ "serde_json",
+]
 
 [[package]]
 name = "bigdecimal"

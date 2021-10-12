@@ -10,9 +10,12 @@ use crate::models::Measurement;
 pub mod models;
 pub mod schema;
 use crate::models::Pool;
-
+use std::env;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    let port = env::var("PORT").unwrap_or_else(|_| "3000".to_string());
+
+    let api_route = format!("0.0.0.0:{}", port);
     dotenv::dotenv();
     let db_url = match std::env::var("DATABASE_URL") {
         Ok(db_url) => db_url,
@@ -31,7 +34,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(Data::new(pool.clone()))
             .service(example)
     })
-    .bind("0.0.0.0:8080")
+    .bind(api_route)
     .unwrap()
     .run()
     .await;
