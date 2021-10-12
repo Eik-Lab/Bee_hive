@@ -33,12 +33,17 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(Data::new(pool.clone()))
             .service(example)
+            .service(no_params)
     })
     .bind(api_route)
     .unwrap()
     .run()
     .await;
     Ok(())
+}
+#[actix_web::get("/")]
+async fn no_params() -> &'static str {
+    "Hello world!\r\n"
 }
 
 #[actix_web::post("/data")]
