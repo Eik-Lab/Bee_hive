@@ -10,6 +10,7 @@ use crate::models::Pool;
 use std::env;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    println!("Start");
     std::env::set_var("RUST_LOG", "actix_web=debug");
     let port = env::var("PORT").unwrap_or_else(|_| "3000".to_string());
     let api_route = format!("0.0.0.0:{}", port);
@@ -20,8 +21,9 @@ async fn main() -> std::io::Result<()> {
             panic!()
         }
     };
+    println!("Getting DB pool");
     let pool = crate::models::init_pool(&db_url);
-
+    println!("Starting API services");
     // Start http server
     HttpServer::new(move || {
         App::new()
@@ -33,6 +35,7 @@ async fn main() -> std::io::Result<()> {
     .unwrap()
     .run()
     .await;
+    println!("Should not be here");
     Ok(())
 }
 #[actix_web::get("/")]
