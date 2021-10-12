@@ -1,7 +1,5 @@
 #[macro_use]
 extern crate diesel;
-#[macro_use]
-extern crate serde_derive;
 
 use actix_web::{web, web::Data, App, HttpServer};
 
@@ -39,7 +37,8 @@ async fn main() -> std::io::Result<()> {
 }
 #[actix_web::get("/")]
 async fn no_params() -> &'static str {
-    "Hello world!\r\n"
+    "Hello and Welcome to Bee-Hive!\r\n
+    To send some data, go to the /data endpoint\r\n"
 }
 
 #[actix_web::post("/data")]
