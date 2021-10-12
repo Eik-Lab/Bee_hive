@@ -46,7 +46,10 @@ async fn example(
     web::Json(test_var): web::Json<Measurement>,
     pool: web::Data<Pool>,
 ) -> actix_web::HttpResponse {
-    println!("{:#?}", test_var);
-    test_var.insert(&pool.get().unwrap());
+    let res = test_var.insert(&pool.get().unwrap());
+    match res {
+        Ok(res) => println!("OK: {}{}", res.pi_id, res.measurement_time),
+        Err(e) => println!("ERR: {}", e.to_string()),
+    }
     actix_web::HttpResponse::Ok().finish()
 }

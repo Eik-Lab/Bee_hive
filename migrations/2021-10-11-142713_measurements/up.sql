@@ -1,7 +1,7 @@
 -- Your SQL goes here
 CREATE TABLE measurements
 (
- pi_id char NOT NULL,
+ pi_id char(50) NOT NULL,
  measurement_time timestamptz NOT NULL,
  temp1            float4 NOT NULL,
  temp2            float4 NOT NULL,
