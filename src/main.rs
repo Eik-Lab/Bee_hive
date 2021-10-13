@@ -1,13 +1,12 @@
 #[macro_use]
 extern crate diesel;
-
 use actix_web::{web, web::Data, App, HttpServer};
-
 use crate::models::Measurement;
 pub mod models;
 pub mod schema;
 use crate::models::Pool;
 use std::env;
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     println!("Start");
@@ -28,24 +27,24 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .app_data(Data::new(pool.clone()))
-            .service(example)
-            .service(no_params)
+            .service(post_data)
+            .service(index)
     })
     .bind(api_route)
     .unwrap()
     .run()
     .await;
-    println!("Should not be here");
+    println!("API server shut down here");
     Ok(())
 }
 #[actix_web::get("/")]
-async fn no_params() -> &'static str {
+async fn index() -> &'static str {
     "Hello and Welcome to Bee-Hive!\r\n
     To send some data, go to the /data endpoint\r\n"
 }
 
 #[actix_web::post("/data")]
-async fn example(
+async fn post_data(
     web::Json(test_var): web::Json<Measurement>,
     pool: web::Data<Pool>,
 ) -> actix_web::HttpResponse {
