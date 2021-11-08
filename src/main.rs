@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate diesel;
 use crate::models::Measurement;
-use actix_web::{web, web::Data, App, HttpServer};
+use actix_web::{App, HttpRequest, HttpServer, web, web::Data};
 use chrono::Utc;
 use diesel::RunQueryDsl;
 use serde::{Deserialize, Serialize};
@@ -11,6 +11,7 @@ use crate::models::Pool;
 use diesel::prelude::*;
 use schema::measurements;
 use std::env;
+use actix_files;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -33,11 +34,12 @@ async fn main() -> std::io::Result<()> {
     println!("Starting API services");
     // Start http server
     HttpServer::new(move || {
-        App::new()
+            App::new()
             .app_data(Data::new(pool.clone()))
             .service(post_data)
             .service(index)
             .service(get_data)
+            .service(serve_docs)
     })
     .bind(api_route)
     .unwrap()
@@ -49,8 +51,15 @@ async fn main() -> std::io::Result<()> {
 #[actix_web::get("/")]
 async fn index() -> &'static str {
     "Hello and Welcome to Bee-Hive!\r\n
-    To send some data, go to the /data endpoint\r\n"
+    To send some data, go to the /data endpoint\r\n
+    You can find the documentation at the /docs endpoint \r\n"
 }
+use actix_web::Result;
+#[actix_web::get("/docs")]
+async fn serve_docs(req: HttpRequest) -> Result<actix_files::NamedFile>{
+Ok(actix_files::NamedFile::open("./static/swagger.html")?)
+}
+
 
 #[actix_web::post("/data")]
 async fn post_data(
@@ -104,3 +113,6 @@ async fn get_data(
     let data: Vec<Measurement> = query.get_results(&conn).unwrap();
     actix_web::HttpResponse::Ok().json(data)
 }
+
+
+

@@ -1,0 +1,108 @@
+swagger: "2.0"
+info:
+  description: "This is the TEST API documentation for the the source code for the [Bee-Hive Project](https://github.com/Eik-Lab/Bee_hive) at [https://www.nmbu.no/](NMBU)"
+  version: "0.1.0"
+  title: "Swagger Bee-Hive"
+  contact:
+    email: "muhammad.uzair.aftab@nmbu.no"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+tags:
+- name: "data"
+  description: "Fetching, or inserting data into the database"
+  externalDocs:
+    url: "http://swagger.io"
+schemes:
+- "https"
+- "http"
+paths:
+  /data:
+    post:
+      tags:
+      - "data"
+      summary: "Add a sensor reading to the database"
+      description: ""
+      operationId: "addData"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "New sensor readings that needs to be inserted into the database"
+        required: true
+        schema:
+          $ref: "#/definitions/Data"
+      responses:
+        "405":
+          description: "Invalid input"
+    get:
+      tags:
+      - "data"
+      summary: "Update an existing pet"
+      description: ""
+      operationId: "updatePet"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Pet object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Data"
+      responses:
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Pet not found"
+        "405":
+          description: "Validation exception"
+definitions:
+  Data:
+    type: "object"
+    required:
+    - "pi_id"
+    - "measurement_time"
+    - "temp1"
+    - "temp2"
+    - "temp3"
+    - "temp4"
+    - "bme_temp1"
+    - "bme_temp2"
+    - "pressure1"
+    - "pressure2"
+    - "rh1"
+    - "rh2"
+    - "image_data"
+    properties:
+      pi_id:
+        type: "string"
+        example: ""
+      name:
+        type: "string"
+        example: "doggie"
+      status:
+        type: "string"
+        description: "pet status in the store"
+        enum:
+        - "available"
+        - "pending"
+        - "sold"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
