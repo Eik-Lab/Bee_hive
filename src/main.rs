@@ -1,14 +1,19 @@
 #[macro_use]
 extern crate diesel;
 use actix_web::{web, web::Data, App, HttpServer};
+use diesel::RunQueryDsl;
 use crate::models::Measurement;
 pub mod models;
 pub mod schema;
 use crate::models::Pool;
 use std::env;
+use schema::{measurements};
+use diesel::prelude::*;
+use dotenv;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    dotenv::dotenv();
     println!("Start");
     std::env::set_var("RUST_LOG", "actix_web=debug");
     let port = env::var("PORT").unwrap_or_else(|_| "3000".to_string());
@@ -45,13 +50,26 @@ async fn index() -> &'static str {
 
 #[actix_web::post("/data")]
 async fn post_data(
-    web::Json(test_var): web::Json<Measurement>,
+    web::Json(data): web::Json<Measurement>,
     pool: web::Data<Pool>,
 ) -> actix_web::HttpResponse {
-    let res = test_var.insert(&pool.get().unwrap());
+    let res = data.insert(&pool.get().unwrap());
     match res {
         Ok(res) => println!("OK: {}{}", res.pi_id, res.measurement_time),
         Err(e) => println!("ERR: {}", e.to_string()),
     }
     actix_web::HttpResponse::Ok().finish()
 }
+
+
+#[actix_web::get("/data")]
+async fn get_data(
+pool: web::Data<Pool>
+) -> actix_web::HttpResponse {
+    let conn = pool.get().unwrap();
+    let data: Vec<Measurement> = measurements::dsl::measurements
+    .order( measurements::measurement_time.desc() )
+    .get_results(&conn).unwrap();
+    actix_web::HttpResponse::Ok().json(data)
+}
+
