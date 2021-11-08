@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate diesel;
 use crate::models::Measurement;
-use actix_web::{App, HttpRequest, HttpServer, web, web::Data};
+use actix_web::{web, web::Data, App, HttpRequest, HttpServer};
 use chrono::Utc;
 use diesel::RunQueryDsl;
 use serde::{Deserialize, Serialize};
@@ -11,13 +11,12 @@ use crate::models::Pool;
 use diesel::prelude::*;
 use schema::measurements;
 use std::env;
-use actix_files;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    if dotenv::dotenv().is_ok(){
+    if dotenv::dotenv().is_ok() {
         println!("Loaded dotenv");
-    } 
+    }
     println!("Start");
     std::env::set_var("RUST_LOG", "actix_web=debug");
     let port = env::var("PORT").unwrap_or_else(|_| "3000".to_string());
@@ -34,7 +33,7 @@ async fn main() -> std::io::Result<()> {
     println!("Starting API services");
     // Start http server
     HttpServer::new(move || {
-            App::new()
+        App::new()
             .app_data(Data::new(pool.clone()))
             .service(post_data)
             .service(index)
@@ -54,12 +53,12 @@ async fn index() -> &'static str {
     To send some data, go to the /data endpoint\r\n
     You can find the documentation at the /docs endpoint \r\n"
 }
+
 use actix_web::Result;
 #[actix_web::get("/docs")]
-async fn serve_docs(req: HttpRequest) -> Result<actix_files::NamedFile>{
-Ok(actix_files::NamedFile::open("./static/swagger.html")?)
+async fn serve_docs() -> Result<actix_files::NamedFile> {
+    Ok(actix_files::NamedFile::open("./static/swagger.html")?)
 }
-
 
 #[actix_web::post("/data")]
 async fn post_data(
@@ -73,6 +72,9 @@ async fn post_data(
     }
     actix_web::HttpResponse::Ok().finish()
 }
+
+
+
 #[derive(Serialize, Deserialize)]
 pub struct QueryFilter {
     pub start_time: Option<chrono::DateTime<Utc>>,
@@ -113,6 +115,3 @@ async fn get_data(
     let data: Vec<Measurement> = query.get_results(&conn).unwrap();
     actix_web::HttpResponse::Ok().json(data)
 }
-
-
-
