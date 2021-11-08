@@ -3,20 +3,20 @@ extern crate diesel;
 use crate::models::Measurement;
 use actix_web::{web, web::Data, App, HttpServer};
 use chrono::Utc;
-use diesel::dsl::Filter;
 use diesel::RunQueryDsl;
 use serde::{Deserialize, Serialize};
 pub mod models;
 pub mod schema;
 use crate::models::Pool;
 use diesel::prelude::*;
-use dotenv;
 use schema::measurements;
 use std::env;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    dotenv::dotenv();
+    if dotenv::dotenv().is_ok(){
+        println!("Loaded dotenv");
+    } 
     println!("Start");
     std::env::set_var("RUST_LOG", "actix_web=debug");
     let port = env::var("PORT").unwrap_or_else(|_| "3000".to_string());
