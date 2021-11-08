@@ -1,15 +1,18 @@
 #[macro_use]
 extern crate diesel;
-use actix_web::{web, web::Data, App, HttpServer};
-use diesel::RunQueryDsl;
 use crate::models::Measurement;
+use actix_web::{web, web::Data, App, HttpServer};
+use chrono::Utc;
+use diesel::dsl::Filter;
+use diesel::RunQueryDsl;
+use serde::{Deserialize, Serialize};
 pub mod models;
 pub mod schema;
 use crate::models::Pool;
-use std::env;
-use schema::{measurements};
 use diesel::prelude::*;
 use dotenv;
+use schema::measurements;
+use std::env;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -34,6 +37,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(Data::new(pool.clone()))
             .service(post_data)
             .service(index)
+            .service(get_data)
     })
     .bind(api_route)
     .unwrap()
@@ -60,16 +64,43 @@ async fn post_data(
     }
     actix_web::HttpResponse::Ok().finish()
 }
-
+#[derive(Serialize, Deserialize)]
+pub struct QueryFilter {
+    pub start_time: Option<chrono::DateTime<Utc>>,
+    pub stop_time: Option<chrono::DateTime<Utc>>,
+    pub sensor_id: Option<String>,
+}
 
 #[actix_web::get("/data")]
 async fn get_data(
-pool: web::Data<Pool>
+    filter: web::Query<QueryFilter>,
+    pool: web::Data<Pool>,
 ) -> actix_web::HttpResponse {
+    let start;
+    let stop;
+    if filter.start_time.is_none() {
+        start = chrono::Utc::now() - chrono::Duration::days(1);
+    } else {
+        start = filter.start_time.unwrap();
+    }
+    if filter.stop_time.is_none() {
+        stop = start + chrono::Duration::days(1);
+    } else {
+        stop = filter.stop_time.unwrap();
+    }
     let conn = pool.get().unwrap();
-    let data: Vec<Measurement> = measurements::dsl::measurements
-    .order( measurements::measurement_time.desc() )
-    .get_results(&conn).unwrap();
+    let mut query = measurements::dsl::measurements
+        .order(measurements::measurement_time.desc())
+        .filter(
+            measurements::measurement_time
+                .ge(start)
+                .and(measurements::measurement_time.lt(stop)),
+        )
+        .into_boxed();
+    if let Some(id) = &filter.sensor_id {
+        query = query.filter(measurements::pi_id.eq(id)); // Add another filter to the request
+    }
+
+    let data: Vec<Measurement> = query.get_results(&conn).unwrap();
     actix_web::HttpResponse::Ok().json(data)
 }
-
