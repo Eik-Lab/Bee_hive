@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate diesel;
 use crate::models::Measurement;
-use actix_web::{web, web::Data, App, HttpRequest, HttpServer};
+use actix_web::{web, web::Data, App, HttpServer};
 use chrono::Utc;
 use diesel::RunQueryDsl;
 use serde::{Deserialize, Serialize};
