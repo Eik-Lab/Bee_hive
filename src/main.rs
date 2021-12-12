@@ -47,6 +47,7 @@ async fn main() -> std::io::Result<()> {
     println!("API server shut down here");
     Ok(())
 }
+
 #[actix_web::get("/")]
 async fn index() -> &'static str {
     "Hello and Welcome to Bee-Hive!\r\n
@@ -72,8 +73,6 @@ async fn post_data(
     }
     actix_web::HttpResponse::Ok().finish()
 }
-
-
 
 #[derive(Serialize, Deserialize)]
 pub struct QueryFilter {

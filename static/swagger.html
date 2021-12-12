@@ -697,7 +697,7 @@ margin-bottom: 20px;
     // Script section to load models into a JS Var
     var defs = {}
         defs["ApiResponse"] = {"type":"object","properties":{"code":{"type":"integer","format":"int32"},"type":{"type":"string"},"message":{"type":"string"}}};
-        defs["Data"] = {"type":"object","required":["pi_id"],"properties":{"pi_id":{"type":"string","example":""},"name":{"type":"string","example":"doggie"},"status":{"type":"string","description":"pet status in the store","enum":["available","pending","sold"]}}};
+        defs["Data"] = {"type":"object","required":["bme_temp1","bme_temp2","image_data","measurement_time","pi_id","pressure1","pressure2","rh1","rh2","temp1","temp2","temp3","temp4"],"properties":{"pi_id":{"type":"string","example":""},"measurement_time":{"type":"string","example":"2021-11-10 07:21:41.141187+00"},"temp1":{"type":"number","example":19.171875},"temp2":{"type":"number"},"temp3":{"type":"number"},"temp4":{"type":"number"},"bme_temp1":{"type":"number","example":25.111972},"bme_temp2":{"type":"number"},"pressure1":{"type":"number","example":100294.12},"pressure2":{"type":"number"},"rh1":{"type":"number","example":12.1234,"description":"Relative humidity in %, without the % sign"},"rh2":{"type":"number"},"image_data":{"type":"array","items":{"type":"number"}}}};
   </script>
 
   <div class="container-fluid">

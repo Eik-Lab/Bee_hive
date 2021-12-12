@@ -83,16 +83,38 @@ definitions:
       pi_id:
         type: "string"
         example: ""
-      name:
+      measurement_time:
         type: "string"
-        example: "doggie"
-      status:
-        type: "string"
-        description: "pet status in the store"
-        enum:
-        - "available"
-        - "pending"
-        - "sold"
+        example: "2021-11-10 07:21:41.141187+00"
+      temp1:
+        type: "number"
+        example: 19.171875
+      temp2:
+        type: "number"
+      temp3:
+        type: "number"
+      temp4:
+        type: "number"
+      bme_temp1:
+        type: "number"
+        example: 25.111972
+      bme_temp2:
+        type: "number"
+      pressure1:
+        type: "number"
+        example: 100294.12
+      pressure2:
+        type: "number"
+      rh1:
+        type: "number"
+        example: 12.1234 
+        description: "Relative humidity in %, without the % sign"
+      rh2:
+        type: "number"
+      image_data:
+        type: "array"
+        items:
+          type: number
   ApiResponse:
     type: "object"
     properties:
