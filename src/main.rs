@@ -39,6 +39,7 @@ async fn main() -> std::io::Result<()> {
             .service(index)
             .service(get_data)
             .service(serve_docs)
+            .service(get_unique_ids)
     })
     .bind(api_route)
     .unwrap()
@@ -116,7 +117,7 @@ async fn get_data(
 }
 
 #[actix_web::get("/get_unique_ids")]
-async fn get_unique_sensors(pool: web::Data<Pool>) -> actix_web::HttpResponse {
+async fn get_unique_ids(pool: web::Data<Pool>) -> actix_web::HttpResponse {
     let conn = pool.get().unwrap();
     let data: Vec<String> = measurements::dsl::measurements
         .select(measurements::pi_id)
