@@ -119,10 +119,19 @@ async fn get_data(
 #[actix_web::get("/get_unique_ids")]
 async fn get_unique_ids(pool: web::Data<Pool>) -> actix_web::HttpResponse {
     let conn = pool.get().unwrap();
-    let data: Vec<String> = measurements::dsl::measurements
+    let mut data: Vec<String> = measurements::dsl::measurements
         .select(measurements::pi_id)
         .distinct()
         .get_results(&conn)
         .unwrap();
-    actix_web::HttpResponse::Ok().json(data)
+    let cleaned_data = remove_whitespace(&mut data);
+    actix_web::HttpResponse::Ok().json(cleaned_data)
+}
+
+// Function that removes whitespace from a vector of strings
+fn remove_whitespace(vec: &mut Vec<String>) -> &mut Vec<String> {
+    for i in 0..vec.len() {
+        vec[i] = vec[i].replace(" ", "");
+    }
+    vec
 }
