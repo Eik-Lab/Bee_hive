@@ -114,3 +114,14 @@ async fn get_data(
     let data: Vec<Measurement> = query.get_results(&conn).unwrap();
     actix_web::HttpResponse::Ok().json(data)
 }
+
+#[actix_web::get("/get_unique_ids")]
+async fn get_unique_sensors(pool: web::Data<Pool>) -> actix_web::HttpResponse {
+    let conn = pool.get().unwrap();
+    let data: Vec<String> = measurements::dsl::measurements
+        .select(measurements::pi_id)
+        .distinct()
+        .get_results(&conn)
+        .unwrap();
+    actix_web::HttpResponse::Ok().json(data)
+}
