@@ -11,6 +11,7 @@ use crate::models::Pool;
 use diesel::prelude::*;
 use schema::measurements;
 use std::env;
+use actix_core::Cors;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -33,8 +34,13 @@ async fn main() -> std::io::Result<()> {
     println!("Starting API services");
     // Start http server
     HttpServer::new(move || {
+        let cors = Cors::default()
+                .allow_any_origin()
+                .allow_any_header()
+                .allow_any_method();
         App::new()
             .app_data(Data::new(pool.clone()))
+            .wrap(cors)
             .service(post_data)
             .service(index)
             .service(get_data)
