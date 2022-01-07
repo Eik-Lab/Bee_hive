@@ -11,7 +11,7 @@ use crate::models::Pool;
 use diesel::prelude::*;
 use schema::measurements;
 use std::env;
-use actix_core::Cors;
+use actix_cors::Cors;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
