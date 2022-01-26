@@ -10,6 +10,8 @@ To run the code, you need to have the following:
 
 - [Rust](https://www.rust-lang.org/) installed on your system.  
    We recommend using [rustup](https://rustup.rs/)
+   
+- Postgresql
 - An .env variable with the PORT and the DATABASE_URL to your database. E.g:
 
 ```
